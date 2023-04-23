@@ -16,3 +16,5 @@ rootProject.name = "MireaProject"
 include ':app'
 include ':fragmentworker'
 include ':cameraaudio'
+include ':profile'
+include ':fileswork'
