@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String fileName = "textCrypt.txt";
 
+    private String fileName1 = "textNormal.txt";
+
     public	static	final	String	ARG_WORD	=	"word";
 
     @Override
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String text = getTextFromFile();
 
-                Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Текст: " + text, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public String getTextFromFile() {
         FileInputStream fin = null;
         try {
-            fin = openFileInput(fileName);
+            fin = openFileInput(fileName1);
             byte[] bytes = new byte[fin.available()];
             fin.read(bytes);
             String text = new String(bytes);

@@ -16,7 +16,9 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.navigation.fragment.NavHostFragment;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
@@ -40,6 +42,8 @@ public class FirstFragment extends Fragment  {
 
     private String fileName1 = "textNormal.txt";
 
+    private String fileName2 = "textSecret.txt";
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -53,6 +57,8 @@ public class FirstFragment extends Fragment  {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.editTextCrypt.setText(getTextFromFile());
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +80,8 @@ public class FirstFragment extends Fragment  {
                 byte[] bytes = encryptMsg(editTextText, secret);
 
 
-                bundle.putByteArray(MyLoader.ARG_WORD,	bytes);
-                bundle.putByteArray("key",	secret.getEncoded());
+         //       bundle.putByteArray(MyLoader.ARG_WORD,	bytes);
+        //        bundle.putByteArray("key",	secret.getEncoded());
 
                 FileOutputStream outputStream;
                 try {
@@ -91,6 +97,17 @@ public class FirstFragment extends Fragment  {
                     outputStream1 = getActivity().openFileOutput(fileName1, Context.MODE_PRIVATE);
                     outputStream1.write(editTextText.getBytes(StandardCharsets.UTF_8));
                     outputStream1.close();
+
+                    // Base64.decodeBase64(editTextText)
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                FileOutputStream outputStream2;
+                try {
+                    outputStream2 = getActivity().openFileOutput(fileName2, Context.MODE_PRIVATE);
+                    outputStream2.write(secret.getEncoded());
+                    outputStream2.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -140,6 +157,26 @@ public class FirstFragment extends Fragment  {
                        |	BadPaddingException	|	InvalidKeyException	e)	{
             throw	new	RuntimeException(e);
         }
+    }
+
+    public String getTextFromFile() {
+        FileInputStream fin = null;
+        try {
+            fin = getActivity().openFileInput(fileName1);
+            byte[] bytes = new byte[fin.available()];
+            fin.read(bytes);
+            String text = new String(bytes);
+
+            return text;
+        } catch (IOException ex) {
+        } finally {
+            try {
+                if (fin != null)
+                    fin.close();
+            } catch (IOException ex) {
+            }
+        }
+        return null;
     }
 
 }

@@ -33,6 +33,8 @@ public class SecondFragment extends Fragment {
 
     private String fileName = "textNormal.txt";
 
+    private String fileName2 = "textSecret.txt";
+
     public	static	final	String	ARG_WORD	=	"word";
 
     TextView tv;
@@ -63,6 +65,12 @@ public class SecondFragment extends Fragment {
 
         String text = getTextFromFile();
 
+     //   byte[] secretText = getTextFromFile();
+
+     //   SecretKey originalKey = getSecretFromFile();
+
+    //    String decryptText = decryptMsg(secretText, originalKey);
+
         tv.setText(text);
     }
 
@@ -81,6 +89,27 @@ public class SecondFragment extends Fragment {
             String text = new String(bytes);
 
             return text;
+        } catch (IOException ex) {
+        } finally {
+            try {
+                if (fin != null)
+                    fin.close();
+            } catch (IOException ex) {
+            }
+        }
+        return null;
+    }
+
+    public SecretKey getSecretFromFile() {
+        FileInputStream fin = null;
+        try {
+            fin = getActivity().openFileInput(fileName2);
+            byte[] bytes = new byte[fin.available()];
+            fin.read(bytes);
+
+            SecretKey originalKey =	new SecretKeySpec(bytes,	0,	bytes.length,	"AES");
+
+            return originalKey;
         } catch (IOException ex) {
         } finally {
             try {
